@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Temperature Dashboard</title>
+    <script src='js/jquery3.3.1.min.js'></script>
+    <script src='js/jquery-ui.js'></script>
+    <script src='js/d3.js'></script>
+    <script src='js/plotly-latest.min.js'></script>
+    <script src='js/plot.js'></script>
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+   </head>
+  <body>
+
+<br>
+
+
+    <div  class="container">
+      <div class="row">
+<h3>Temp [<sup>o</sup>C]</h3>
+
+      <div class="col-sm-2 col-lg-2">
+        <div class="half-unit">
+    	      <h5>T1 </h5>
+    	      	<hr>
+    		      	<div  class="clockcenter"  >
+    			      	<digiclock  id ="a"> 0.0 </digiclock>
+    		      	</div>
+    			</div>
+      </div>
+
+
+      <div class="col-sm-2 col-lg-2">
+        <div class="half-unit">
+    	      <h5>T2</h5>
+    	      	<hr>
+    		      	<div  class="clockcenter"  >
+    			      	<digiclock  id ="b"> 0.0 </digiclock>
+    		      	</div>
+    			</div>
+      </div>
+
+      <div class="col-sm-2 col-lg-2">
+        <div class="half-unit">
+    	      <h5>T3</h5>
+    	      	<hr>
+    		      	<div  class="clockcenter"  >
+    			      	<digiclock  id ="c"> 0.0 </digiclock>
+    		      	</div>
+    			</div>
+      </div>
+
+
+</div>
+</div>
+
+<hr>
+
+    <div id ="plot"></div>
+
+    <script src='js/main.js'></script>
+
+  </body>
+</html>
