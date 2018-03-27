@@ -1,10 +1,11 @@
 //server
-var express = require('express');
-var app = express();
-var server = app.listen(3000);
-app.use(express.static('gui'));
+
+var tStep = 0;
+var j = 0
 
 var fs = require('fs');
+
+
 var SerialPort = require('serialport');
 var port = new SerialPort('COM3' , {
   baudRate: 9600,
@@ -19,6 +20,17 @@ console.log(tempData);
 var rawConf = fs.readFileSync('config.json');
 var conf = JSON.parse(rawConf);
 console.log(conf);
+
+// time data
+var now = Date.now();
+fs.writeFileSync('./time.txt', now);
+var rawTime = fs.readFileSync('./time.txt');
+var timeData = rawTime.toString()
+console.log(timeData);
+
+// reset data.csv file when start
+var csvkeys = "time,id,temp\r\n"
+//fs.writeFileSync('./gui/data.csv', csvkeys);
 
 //open port
 port.on("open", readPort );
@@ -43,7 +55,7 @@ function readPort(){
     var id = splitData[0];
     var temp = splitData[1];
 
-    // config 
+    // config
     var tempId = conf[id];
 
   //console.log(tempId);
@@ -54,12 +66,31 @@ function readPort(){
     fs.writeFileSync('./gui/data.json', writeData);
 
     // write data to csv
-    time = Date.now();
+    var time = Date.now();
+
+    var rawTime = fs.readFileSync('./time.txt');
+    var timeData = rawTime.toString()
+    //console.log(timeData);
+
+    var diff = time - timeData;
+    console.log(diff);
+    console.log(j);
+    if (diff > 2000  && j > 1 ){
+     tStep = tStep + 5;
+      }
+
+
+    fs.writeFileSync('./time.txt', time);
 
     var csvData = time + "," +tempId +","+ temp + "\r\n";
 //var csvData ="time:"+ time + ",id:" + id +","+"temp:"+ temp + "\r\n";
     fs.appendFileSync('./gui/data.csv', csvData);
-
+    j++
+    
+    //
+    // if (j == 2){
+    //   port.close();
+    // }
 
   });
 };

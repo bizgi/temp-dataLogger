@@ -21,6 +21,12 @@
 - #b2c831 (Green - Used in titles, badges, bars and other)
 - #bdbdbd & #fff (Font colors)
 */
+
+
+Data {
+  visibility: hidden;
+}
+
 .element, .outer-container {
  width: 555px ;
  height: 300px;
