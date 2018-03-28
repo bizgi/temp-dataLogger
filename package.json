@@ -1,0 +1,28 @@
+{
+  "name": "temp-datalogger",
+  "version": "1.0.0",
+  "description": "temperature data logger ardunio",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bizgi/temp-dataLogger.git"
+  },
+  "keywords": [
+    "ardunio",
+    "data-logger"
+  ],
+  "author": "bizgi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bizgi/temp-dataLogger/issues"
+  },
+  "homepage": "https://github.com/bizgi/temp-dataLogger#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "serialport": "^6.1.1"
+  }
+}
