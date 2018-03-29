@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Temperature Dashboard</title>
+    <script src='js/jquery3.3.1.min.js'></script>
+    <script src='js/jquery-ui.js'></script>
+     <script src='js/d3.js'></script>
+    <script src='js/plotly-latest.min.js'></script>
+
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <script>
+    function onoff(){
+      currentvalue = document.getElementById('onoff').value;
+      if(currentvalue == "Off"){
+        document.getElementById("onoff").value="On";
+        location.reload();
+      }else{
+        document.getElementById("onoff").value="Off";
+      }
+    }
+    </script>
+
+    <script src='js/plot.js'></script>
+    <script src='js/save-plots.js'></script>
+    <script src='js/main.js'></script>
+
+   </head>
+  <body>
+
+<br>
+
+<div  class="container">
+  <div class="row">
+        <a href="./index.html">INDEX</a>
+        <a href="./dash.html">DASH</a>
+
+        <h3>Temp [<sup>o</sup>C]</h3>
+
+      <div class="col-sm-2 col-lg-2">
+        <div class="half-unit">
+    	      <h5>T1 </h5>
+    	      	<hr>
+    		      	<div  class="clockcenter"  >
+    			      	<digiclock  id ="a"> 0.0 </digiclock>
+    		      	</div>
+    			</div>
+      </div>
+
+
+      <div class="col-sm-2 col-lg-2">
+        <div class="half-unit">
+    	      <h5>T2</h5>
+    	      	<hr>
+    		      	<div  class="clockcenter"  >
+    			      	<digiclock  id ="b"> 0.0 </digiclock>
+    		      	</div>
+    			</div>
+      </div>
+
+      <div class="col-sm-2 col-lg-2">
+        <div class="half-unit">
+    	      <h5>T3</h5>
+    	      	<hr>
+    		      	<div  class="clockcenter"  >
+    			      	<digiclock  id ="c"> 0.0 </digiclock>
+    		      	</div>
+    			</div>
+      </div>
+
+
+    </div>
+
+
+<hr>
+
+STATUS: <div id="status"></div>
+<p>
+stat: <input id="st">
+</p>
+ <button id = "btn"> Gönder</button>
+<br>
+
+Yenile: <input type="button" value="On" id="onoff" onclick="onoff();">
+<br>
+ <button id = "saveData"> Save Data</button>
+<br>
+
+
+ <button id="tik">Save Plot</button>
+    <div id ="plot"></div>
+
+<div id = "plotData" class="Data"> </div>
+
+
+</div>
+  </body>
+</html>

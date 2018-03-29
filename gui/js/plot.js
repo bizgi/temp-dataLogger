@@ -61,13 +61,17 @@ var layout = {
 }
 
 var csv = "./data.csv";
+var adata;
+
 
 function ciz(){
 	Plotly.d3.csv(csv, function(data){
+		adata = data;
 		processData(data) } );
 
 	function processData(data) {
 		allRows = data;
+
 	   // console.log(allRows);
 			//console.log(allRows[0]["id"]);
     var x = [],
@@ -197,15 +201,43 @@ function makePlotly(plotPoints){
 		};
 
 		var savePlot = document.getElementById("tik");
-		savePlot.addEventListener("click",function(e){ plotSave(data, layout, saveName); },false);
+	 	savePlot.addEventListener("click",function(e){ plotSave(data, layout, saveName); },false);
 
 		var saveData= document.getElementById("saveData");
 		saveData.addEventListener("click",function(e){ downloadData(); },false);
 	 };
 
+
+
+
+
 };
 
 ciz();
+
+
+function getData() {
+    $.getJSON("data.json", function (data) {
+      $('#a').animate({color: '#FF0000'}, 'slow').animate({color: '#fff'}, 'slow');
+      $('#b').animate({color: '#FF0000'}, 'slow').animate({color: '#fff'}, 'slow');
+      $('#c').animate({color: '#FF0000'}, 'slow').animate({color: '#fff'}, 'slow');
+      var autoRef = document.getElementById("onoff").value;
+
+        $.each(data, function (i, item) {
+          document.getElementById('a').innerHTML = data["T1"];
+          document.getElementById('b').innerHTML = data["T2"];
+          document.getElementById('c').innerHTML = data["T3"];
+
+        });
+
+        // if (autoRef == "On") {
+        // 	  setTimeout(getData, 5000);
+        //     setTimeout(ciz, 5000);
+        // }
+    });
+
+ };
+getData(); // run once to start it
 
 // setInterval(ciz, 5000);
 // var autoRef2 = document.getElementById("onoff").value;

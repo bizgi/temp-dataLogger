@@ -10,30 +10,17 @@
 
     <link href="css/main.css" rel="stylesheet">
     <link href="css/bootstrap.css" rel="stylesheet">
-    <script>
-    function onoff(){
-      currentvalue = document.getElementById('onoff').value;
-      if(currentvalue == "Off"){
-        document.getElementById("onoff").value="On";
-        location.reload();
-      }else{
-        document.getElementById("onoff").value="Off";
-      }
-    }
-    </script>
-    <script src='js/plot.js'></script>
-    <script src='js/save-plots.js'></script>
     <script src='js/main.js'></script>
 
    </head>
   <body>
 
 <br>
-
-
-    <div  class="container">
-      <div class="row">
-<h3>Temp [<sup>o</sup>C]</h3>
+<div  class="container">
+  <div class="row">
+        <a href="./index.html">INDEX</a>
+        <a href="./dash.html">DASH</a>
+        <h3>Temp [<sup>o</sup>C]</h3>
 
       <div class="col-sm-2 col-lg-2">
         <div class="half-unit">
@@ -67,26 +54,26 @@
       </div>
 
 
-</div>
-</div>
+    </div>
 
 <hr>
 
-Yenile: <input type="button" value="On" id="onoff" onclick="onoff();">
-
-
-
-
+Name: <input id="expName">
 <br>
- <button id = "saveData"> Save Data</button>
- <br>
+Time Step: <input id="expTimeStep">
+<br>
+<button id="init">Init Exp</button>
+
+<hr>
+
+</p>
+ Start/Stop Experiment: <input type="button" value="START" id="btn">
+<br>
 
 
- <button id="tik">Save Plot</button>
-    <div id ="plot"></div>
 
-<div id = "plotData" class="Data"> </div>
 
+</div>
 
 
   </body>

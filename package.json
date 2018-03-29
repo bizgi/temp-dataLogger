@@ -2,7 +2,7 @@
   "name": "temp-datalogger",
   "version": "1.0.0",
   "description": "temperature data logger ardunio",
-  "main": "server.js",
+  "main": "readPort.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"

@@ -1,23 +1,47 @@
 
-function getData() {
-    $.getJSON("data.json", function (data) {
-      $('#a').animate({color: '#FF0000'}, 'slow').animate({color: '#fff'}, 'slow');
-      $('#b').animate({color: '#FF0000'}, 'slow').animate({color: '#fff'}, 'slow');
-      $('#c').animate({color: '#FF0000'}, 'slow').animate({color: '#fff'}, 'slow');
-      var autoRef = document.getElementById("onoff").value;
+// $.getJSON("all/status", gotData);
+//   function gotData(data){
+//     console.log(data);
+//     document.getElementById('status').innerHTML = data["status"];
+//
+//   }
 
-        $.each(data, function (i, item) {
-          document.getElementById('a').innerHTML = data["T1"];
-          document.getElementById('b').innerHTML = data["T2"];
-          document.getElementById('c').innerHTML = data["T3"];
+window.onload=function() {
+  // start - stop port reading
+  var bt = document.getElementById("btn");
+  //console.log(bt);
+  bt.addEventListener("click",function(e){ submitStatus(); },false);
 
-        });
+  function submitStatus(){
+   //console.log(val);
+    var val = document.getElementById('btn').value;
+    $.getJSON("stat/status/" + val);
 
-        // if (autoRef == "On") {
-        // 	  setTimeout(getData, 5000);
-        //     setTimeout(ciz, 5000);
-        // }
-    });
+    currentvalue = document.getElementById('btn').value;
+    if(currentvalue == "STOP"){
+      document.getElementById("btn").value="START";
+    }else{
+      document.getElementById("btn").value="STOP";
+    };
+  };
 
- };
-getData(); // run once to start it
+  var init = document.getElementById("init");
+  //console.log(bt);
+  init.addEventListener("click",function(e){ initExp(); },false);
+
+  function initExp(){
+    var expName = document.getElementById("expName").value;
+    var expTimeStep = document.getElementById("expTimeStep").value;
+    console.log(expName, expTimeStep);
+    $.getJSON("add/" + "expName/" + expName );
+    $.getJSON("add/" + "expTimeStep/" + expTimeStep );
+
+     document.getElementById("expName").value = null;
+     document.getElementById("expTimeStep").value = null;
+
+  };
+   //--------------
+
+
+
+};
