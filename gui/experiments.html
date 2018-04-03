@@ -38,58 +38,33 @@
     <a href="./dash.html">DASH</a>
     <a href="./experiments.html">EXPERIMENTS</a>
 
-<br><br>
-    <p>
-      Stop Experiment: <input class="btn btn-primary" type="button" value=" " id="sbtn">
-     <br>
-    </p>
-
         <h3>Temp [<sup>o</sup>C]</h3>
 
-      <div class="col-sm-2 col-lg-2">
-        <div class="half-unit">
-    	      <h5>T1 </h5>
-    	      	<hr>
-    		      	<div  class="clockcenter"  >
-    			      	<digiclock  id ="a"> 0.0 </digiclock>
-    		      	</div>
-    			</div>
-      </div>
 
-
-      <div class="col-sm-2 col-lg-2">
-        <div class="half-unit">
-    	      <h5>T2</h5>
-    	      	<hr>
-    		      	<div  class="clockcenter"  >
-    			      	<digiclock  id ="b"> 0.0 </digiclock>
-    		      	</div>
-    			</div>
-      </div>
-
-      <div class="col-sm-2 col-lg-2">
-        <div class="half-unit">
-    	      <h5>T3</h5>
-    	      	<hr>
-    		      	<div  class="clockcenter"  >
-    			      	<digiclock  id ="c"> 0.0 </digiclock>
-    		      	</div>
-    			</div>
-      </div>
 
 
     </div>
 
 
- <hr>
-<div id="display">... </div>
+<hr>
+<select id = "expDataLoad" class="form-control">
+
+
+</select>
 <br>
-<!--
-Yenile: <input type="button" value="On" id="onoff" onclick="onoff();">
--->
+<button id="selectBtn"> Plot </button>
+<hr>
+<br>
+<div id="display">... </div>
+<br><br>
+
+ <br>
+ <button id = "saveData"> Save Data</button>
+<br>
 
 
-     <div id ="plot"></div>
+ <button id="tik">Save Plot</button>
+    <div id ="plot"></div>
 
 <div id = "plotData" class="Data"> </div>
 <img id="jpg-export"></img>

@@ -2,7 +2,6 @@
 
 function portReader(){
 
-
 var tStep = 0;
 var j = 0
 
@@ -24,6 +23,23 @@ var rawConf = fs.readFileSync('config.json');
 var conf = JSON.parse(rawConf);
 console.log(conf);
 
+//read epxeriment setup file
+var rawExp = fs.readFileSync('./gui/expSetup.json');
+var expSetup = JSON.parse(rawExp);
+console.log(expSetup);
+
+// create experiment data folder
+var dirName = expSetup["expName"];
+console.log(dirName);
+ var dir = './gui/expData/'+ dirName;
+ if (!fs.existsSync(dir)){
+     fs.mkdirSync(dir);
+ };
+
+ // reset data.csv file when start
+ var csvkeys = "time,id,temp\r\n"
+ fs.writeFileSync('./gui/expData/' + dirName +'/data.csv', csvkeys);
+
 // time data
 var now = Date.now();
 fs.writeFileSync('./time.txt', now);
@@ -31,9 +47,7 @@ var rawTime = fs.readFileSync('./time.txt');
 var timeData = rawTime.toString()
 console.log(timeData);
 
-// reset data.csv file when start
-var csvkeys = "time,id,temp\r\n"
-//fs.writeFileSync('./gui/data.csv', csvkeys);
+
 
 //open port
 port.on("open", readPort );
@@ -43,6 +57,7 @@ function readPort(){
     port.write('main screen turn on', function(err) {
       if (err) {
         return console.log('Error on write: ', err.message);
+
       }
       console.log('reading port...');
     });
@@ -95,19 +110,12 @@ function readPort(){
 
     fs.writeFileSync('./time.txt', time);
 
-    var csvData = time + "," +tempId +","+ temp + "\r\n";
+    var csvData = time + "," + tempId +","+ temp + "\r\n";
+ 
 //var csvData ="time:"+ time + ",id:" + id +","+"temp:"+ temp + "\r\n";
   //fs.mkdirSync('./gui/de1');
 
-var de1 ='dede' 
-  var dir = './gui/'+ de1;
-
-  if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
-  };
-
-
-  fs.appendFileSync('./gui/' + de1 +'/data.csv', csvData);
+  fs.appendFileSync('./gui/expData/' + dirName +'/data.csv', csvData);
     j++
   });
 };

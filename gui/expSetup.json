@@ -1,4 +1,7 @@
 {
-  "expName": "deney3",
-  "expTimeStep": "20"
+  "expName": "Deney-No-2",
+  "expTimeStep": "5",
+  "expTotalTime": "300",
+  "expHotInletFlowRate": "3",
+  "expColdInletFlowRate": "2"
 }

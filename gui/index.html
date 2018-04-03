@@ -20,54 +20,74 @@
   <div class="row">
         <a href="./index.html">INDEX</a>
         <a href="./dash.html">DASH</a>
+        <a href="./experiments.html">EXPERIMENTS</a>
         <h3>Temp [<sup>o</sup>C]</h3>
 
-      <div class="col-sm-2 col-lg-2">
-        <div class="half-unit">
-    	      <h5>T1 </h5>
-    	      	<hr>
-    		      	<div  class="clockcenter"  >
-    			      	<digiclock  id ="a"> 0.0 </digiclock>
-    		      	</div>
-    			</div>
-      </div>
-
-
-      <div class="col-sm-2 col-lg-2">
-        <div class="half-unit">
-    	      <h5>T2</h5>
-    	      	<hr>
-    		      	<div  class="clockcenter"  >
-    			      	<digiclock  id ="b"> 0.0 </digiclock>
-    		      	</div>
-    			</div>
-      </div>
-
-      <div class="col-sm-2 col-lg-2">
-        <div class="half-unit">
-    	      <h5>T3</h5>
-    	      	<hr>
-    		      	<div  class="clockcenter"  >
-    			      	<digiclock  id ="c"> 0.0 </digiclock>
-    		      	</div>
-    			</div>
-      </div>
 
 
     </div>
 
 <hr>
+<h3>Experiment Setup</h3>
 
-Name: <input id="expName">
+<div class="row">
+  <div class="col-md-4">
+    <h3>Setup</h3>
+    <div class="form-group">
+    Experiment Name <input class="form-control" id="expName">
+      <div class="row">
+        <div class="col-md-6">
+          Time Step [minute] <input class="form-control" id="expTimeStep">
+        </div>
+        <div class="col-md-6">
+          Total Time [minute] <input class="form-control" id="expTotalTime">
+        </div>
+      </div>
+
+    <hr>
+    <div class="row">
+      <div class="col-md-6">
+        Hot Inlet Flow Rate [L/dk] <input class="form-control" id="expHotInletFlowRate">
+      </div>
+      <div class="col-md-6">
+        Cold Inlet Flow Rate [L/dk] <input class="form-control" id="expColdInletFlowRate">
+      </div>
+    </div>
+
+    <br>
+    <button class="btn btn-primary" id="init">Init Exp</button>
+    </div>
+  </div>
+
+  <div class="col-md-2">
+  </div>
+
+  <div class="col-md-6">
+    <h3>Initial </h3>
+    <dl class="dl-horizontal">
+      <dt>Experiment Name</dt>
+        <dd id = "initExpName">...</dd>
+      <dt>Time Step</dt>
+        <dd id = "initExpTimeStep">...</dd>
+      <dt>Total Time</dt>
+        <dd id = "initTotalTime">...</dd>
+      <hr>
+      <dt>Hot Inlet Flow Rate</dt>
+        <dd id = "initHotInletFlowRate">...</dd>
+      <dt>Cold Inlet Flow Rate</dt>
+        <dd id = "initColdInletFlowRate">...</dd>
+    </dl>
+  </div>
+
+</div>
+
 <br>
-Time Step: <input id="expTimeStep">
-<br>
-<button id="init">Init Exp</button>
+
 
 <hr>
 
 </p>
- Start/Stop Experiment: <input type="button" value="START" id="btn">
+ Start/Stop Experiment: <input class="btn btn-primary" type="button" value="START" id="btn">
 <br>
 
 

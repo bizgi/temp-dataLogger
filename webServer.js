@@ -69,3 +69,12 @@ function cstatus(req, res){
   }
   res.send(reply)
 }
+
+// saved experiment data directory list
+app.get('/expDir', getExpDir);
+function getExpDir(req, res){
+  let dirJson = {};
+  let dir = fs.readdirSync('./gui/expData/');
+  dirJson['exp'] = dir
+  res.send(dirJson)
+};

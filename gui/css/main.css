@@ -21,7 +21,9 @@
 - #b2c831 (Green - Used in titles, badges, bars and other)
 - #bdbdbd & #fff (Font colors)
 */
-
+.ytitle{
+  font-size: 10px;
+}
 
 Data {
   visibility: hidden;

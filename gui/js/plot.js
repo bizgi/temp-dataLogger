@@ -1,3 +1,7 @@
+document.addEventListener('DOMContentLoaded', lo);
+
+function lo(){
+
 
 var layout = {
 	//width: 800,
@@ -54,24 +58,92 @@ var layout = {
 
 		titlefont: {
 			//	family: 'Courier New, monospace',
-				size: 34,
+				size: 28,
 				color: 'black'
 				}
 	}
 }
 
-var csv = "./data.csv";
-var adata;
+// get experiment status
+var expStatus;
+$.getJSON('./status.json', gotStatus);
+	function gotStatus(status){
+		expStatus = status['status'];
+		// console.log(expStatus);
+	};
 
+var csv;
+
+// put all saved experiment data into selection form
+if (document.getElementById('expDataLoad') != null){
+	$.getJSON("/expDir", gotData);
+		function gotData(data){
+			//console.log('dir', data);
+			let expDatas = data['exp'];
+			let opts = "";
+			for (let i = 0; i < expDatas.length; i++) {
+			    opts += "<option value='" + expDatas[i] + "'>" + expDatas[i] + "</option>";
+			}
+			$("#expDataLoad").append(opts);
+		};
+}
+
+
+// load current experiment data
+var expTimeStep,
+		expTotalTime,
+		expHotInletFlowRate,
+		expColdInletFlowRate;
+
+$.ajax({
+    type: 'GET',
+    url: './expSetup.json',
+    dataType: 'json',
+		async: false,
+		success:   function (data){
+		    var dir = data["expName"];
+				expTimeStep = data["expTimeStep"];
+				expTotalTime = data["expTotalTime"];
+				expHotInletFlowRate = data["expHotInletFlowRate"];
+				expColdInletFlowRate = data["expColdInletFlowRate"];
+
+				csv = "./expData/" + dir + "/data.csv"
+				document.getElementById('display').innerHTML = dir;
+
+			}
+});
+
+// show saved experiment data
+	function show_selected() {
+		// location = location;
+
+ 	    let value =  $('#expDataLoad').val();
+	    document.getElementById('display').innerHTML = value;
+			csv = "./expData/" + value + "/data.csv"
+
+			$(document).ready(function(){
+					ciz()
+			});
+	};
+
+if (document.getElementById('selectBtn') != null){
+ 	document.getElementById('selectBtn').addEventListener('click', show_selected);
+};
+
+//console.log(csv);
+// var csv = "./data.csv";
 
 function ciz(){
-	Plotly.d3.csv(csv, function(data){
-		adata = data;
-		processData(data) } );
+
+  d3.csv(csv, parsedData);
+		function parsedData(data){
+			// console.log(data);
+ 			processData(data)
+ 		};
+
 
 	function processData(data) {
 		allRows = data;
-
 	   // console.log(allRows);
 			//console.log(allRows[0]["id"]);
     var x = [],
@@ -81,7 +153,7 @@ function ciz(){
 
 		//var t_end = Number(allRows[allRows.length-1]["time"]);
 		//console.log(t_end);
-		var t_end = 120;
+		var t_end = Number(expTotalTime);
 		var timeStep = 0;
 
 	  for (var i=0; i<allRows.length; i++) {
@@ -93,7 +165,7 @@ function ciz(){
 
 			// x axis values - 5 min
 			x.push(timeStep);
-			timeStep = timeStep + 5;
+			timeStep = timeStep + Number(expTimeStep);
 
 			if (row["id"] == "T1") {
 				t1_y.push(row["temp"]);
@@ -106,7 +178,7 @@ function ciz(){
 			};
 		};
 
-		console.log(x);
+		//console.log(x);
 		var plotPoints = [x, t1_y, t2_y, t3_y];
 
 		makePlotly(plotPoints);
@@ -120,7 +192,7 @@ function ciz(){
 			t_bottom = t1_y[i]
 			ric.push (richardson(t_top, t_bottom));
 		};
-		console.log(ric);
+		console.log('richardson', ric);
 
 	};
 
@@ -162,22 +234,47 @@ function makePlotly(plotPoints){
 			data.push(trace);
 		};
 
-		console.log(data);
+		console.log('plot data', data);
+
+		var d3 = Plotly.d3;
+		var img_jpg= d3.select('#jpg-export');
 
 		Plotly.newPlot('plot', data, layout)
+		// .then(
+    // function(gd)
+    //  {
+    //   Plotly.toImage(gd,{height:720,width:1280})
+    //      .then(
+    //         function(url)
+    //      {
+    //          img_jpg.attr("src", url);
+    //          return Plotly.toImage(gd,{format:'jpeg',height:720,width:1280});
+    //      }
+    //      )
+    // });
 
 		var saveName = layout['yaxis']['title'] + " - " + layout['xaxis']['title']
 
-		function plotSave (data, layout, saveName){
-				Plotly.newPlot('plot', data, layout)
-					 .then(function(gd) {
-								Plotly.downloadImage(gd, {
-									format: 'png',
-									height: 1080,
-									width: 1920,
-									filename: saveName
-								})
-							});
+		function plotSave (){
+				Plotly.downloadImage(plot, {
+					format: 'png',
+					width: 1920,
+					height: 1080,
+					filename: saveName
+				});
+
+				// Plotly.toImage(plot, {
+				// 	format: 'png',
+				// 	width: 1920,
+				// 	height: 1080,
+				// 	// filename: saveName
+				// }).then(
+		    //         function(url)
+		    //      {
+		    //          img_jpg.attr("src", url);
+		    //          return Plotly.toImage(plot,{format:'png',height:720,width:1280});
+		    //      }
+		    //      );
 			};
 
 		function downloadData() {
@@ -200,28 +297,31 @@ function makePlotly(plotPoints){
        a.click(); //Trigger a click on the element
 		};
 
-		var savePlot = document.getElementById("tik");
-	 	savePlot.addEventListener("click",function(e){ plotSave(data, layout, saveName); },false);
+		if ( document.getElementById("tik") != null){
+			var savePlot = document.getElementById("tik");
+			savePlot.addEventListener("click",function(e){ plotSave(); },false);
 
-		var saveData= document.getElementById("saveData");
-		saveData.addEventListener("click",function(e){ downloadData(); },false);
+			var saveData= document.getElementById("saveData");
+			saveData.addEventListener("click",function(e){ downloadData(); },false);
+		};
+
+
 	 };
-
-
-
 
 
 };
 
+if (document.getElementById('expDataLoad') == null){
 ciz();
+}
 
-
+/// temperatures
 function getData() {
     $.getJSON("data.json", function (data) {
       $('#a').animate({color: '#FF0000'}, 'slow').animate({color: '#fff'}, 'slow');
       $('#b').animate({color: '#FF0000'}, 'slow').animate({color: '#fff'}, 'slow');
       $('#c').animate({color: '#FF0000'}, 'slow').animate({color: '#fff'}, 'slow');
-      var autoRef = document.getElementById("onoff").value;
+      // var autoRef = document.getElementById("onoff").value;
 
         $.each(data, function (i, item) {
           document.getElementById('a').innerHTML = data["T1"];
@@ -230,17 +330,33 @@ function getData() {
 
         });
 
+					if (document.getElementById('expDataLoad') == null){
+						if (expStatus  == 'START') {
+							setTimeout(getData, 5000);
+							setTimeout(ciz, 5000);
+						}
+
+					}
+
+
+
         // if (autoRef == "On") {
         // 	  setTimeout(getData, 5000);
         //     setTimeout(ciz, 5000);
         // }
+
+
+
     });
 
  };
-getData(); // run once to start it
 
+ if (document.getElementById('expDataLoad') == null){
+getData(); // run once to start it
+}
 // setInterval(ciz, 5000);
 // var autoRef2 = document.getElementById("onoff").value;
 // if (autoRef2 == "On") {
 // 		setInterval(ciz, 5000);
 // 	};
+}
