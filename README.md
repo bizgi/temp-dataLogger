@@ -1,2 +1,2 @@
 # temp-dataLogger
-temperature data logger, ardunio, ds18b20
+temperature data logger with ardunio and ds18b20 temperature sensor.
