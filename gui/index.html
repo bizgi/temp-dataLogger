@@ -17,20 +17,17 @@
 
 <br>
 <div  class="container">
-  <div class="row">
+    <div class="row">
         <a href="./index.html">INDEX</a>
         <a href="./dash.html">DASH</a>
         <a href="./experiments.html">EXPERIMENTS</a>
         <h3>Temp [<sup>o</sup>C]</h3>
-
-
-
     </div>
 
-<hr>
-<h3>Experiment Setup</h3>
+  <hr>
+  <h3>Experiment Setup</h3>
 
-<div class="row">
+  <div class="row">
   <div class="col-md-4">
     <h3>Setup</h3>
     <div class="form-group">
@@ -62,38 +59,92 @@
   <div class="col-md-2">
   </div>
 
-  <div class="col-md-6">
-    <h3>Initial </h3>
-    <dl class="dl-horizontal">
-      <dt>Experiment Name</dt>
-        <dd id = "initExpName">...</dd>
-      <dt>Time Step</dt>
-        <dd id = "initExpTimeStep">...</dd>
-      <dt>Total Time</dt>
-        <dd id = "initTotalTime">...</dd>
-      <hr>
-      <dt>Hot Inlet Flow Rate</dt>
-        <dd id = "initHotInletFlowRate">...</dd>
-      <dt>Cold Inlet Flow Rate</dt>
-        <dd id = "initColdInletFlowRate">...</dd>
-    </dl>
+    <div class="col-md-6">
+      <h3>Initial </h3>
+      <dl class="dl-horizontal">
+        <dt>Experiment Name</dt>
+          <dd id = "initExpName">...</dd>
+        <dt>Time Step</dt>
+          <dd id = "initExpTimeStep">...</dd>
+        <dt>Total Time</dt>
+          <dd id = "initTotalTime">...</dd>
+        <hr>
+        <dt>Hot Inlet Flow Rate</dt>
+          <dd id = "initHotInletFlowRate">...</dd>
+        <dt>Cold Inlet Flow Rate</dt>
+          <dd id = "initColdInletFlowRate">...</dd>
+      </dl>
+    </div>
+
   </div>
 
-</div>
-
-<br>
+  <br>
 
 
-<hr>
+  <hr>
 
-</p>
  Start/Stop Experiment: <input class="btn btn-primary" type="button" value="START" id="btn">
 <br>
+<hr>
+  <!---
+    Auto Sensor Init ***********************************************
+  --->
 
+<div class="row">
+<h3>Sensor Init</h3>
+  <div class="col">
+ Start Sensor Init <br>
+  <input class="btn btn-primary" type="button" value="START" id="sensorInitBtn">
+  </div>
+</div>
+<br><br>
+
+ <div class="row">
+   <p id="reading"></p>
+  <div class="col-md-8" id="sensor-area">
+
+
+     <div class="col-md-4"> Sensor Id
+     </div>
+
+     <div class="col-md-4"> Temperature
+     </div>
+
+     <div class="col-md-4">Sensor Name
+       <br><br>
+     </div>
+
+     <div id="sensor-names">
+        <!-- create form from main.js  -->
+     </div>
+
+     <div class="col-md-4">
+     </div>
+
+     <div class="col-md-4">
+     </div>
+
+     <div class="col-md-4">
+       <input class="btn btn-primary" type="button" value="Save" id="saveSensorNames">
+     </div>
+
+
+   </div>
+
+   <div class="col-md-4">
+   </div>
+
+
+ </div>
+
+   <hr>
+  <!--********************************************************
+  -->
 
 
 
 </div>
+
 
 
   </body>

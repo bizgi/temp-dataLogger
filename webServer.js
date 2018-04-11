@@ -78,3 +78,23 @@ function getExpDir(req, res){
   dirJson['exp'] = dir
   res.send(dirJson)
 };
+
+
+// sensor init
+var sensors ={};
+app.get('/sensor/:key/:value', addSensor);
+function addSensor(req, res){
+  let data = req.params;
+  let key = data.key;
+  let value = data.value;
+
+  sensors[key] = value;
+
+  let dd = JSON.stringify(sensors, null, 2);
+  fs.writeFileSync('./gui/config.json', dd);
+
+  var reply = {
+    msg : "eklendi"
+  }
+  res.send(reply)
+}

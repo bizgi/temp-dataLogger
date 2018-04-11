@@ -3,66 +3,6 @@ document.addEventListener('DOMContentLoaded', lo);
 function lo(){
 
 
-var layout = {
-	//width: 800,
-	//height: 600,
-	//title: 'Sıcaklık Dağılımı',
-	legend: {
-		y: 0.5,
-		//traceorder: 'reversed',
-		font: {size: 26},
-	},
-	margin:{
-		b:150,
-		l:150
-	},
-
-	xaxis: {
-		showgrid: true,
-		zeroline: true,
-		showline: true,
-		ticks: 'inside',
-		mirror: 'ticks',
-		tick0: 0,
-		rangemode: 'tozero',
-		autorange: true,
-		// multiple plot
-		//domain: [0, 0.45],
-
-		title: 'Zaman [dk]',
-			tickfont: {
-				family: 'Old Standard TT, serif',
-				size: 28,
-				color: 'black'
-			},
-			titlefont: {
-				//family: 'Courier New, monospace',
-				size: 28,
-				color: 'black'
-			},
-		},
-
-	yaxis: {
-		showgrid: true,
-		zeroline: true,
-		showline: true,
-		ticks: 'inside',
-		mirror: 'ticks',
-
-		title: 'Sıcaklık [<sup>o</sup>C]',
-		tickfont: {
-			family: 'Old Standard TT, serif',
-			size: 28,
-			color: 'black',
-		},
-
-		titlefont: {
-			//	family: 'Courier New, monospace',
-				size: 28,
-				color: 'black'
-				}
-	}
-}
 
 // get experiment status
 var expStatus;
@@ -85,6 +25,7 @@ if (document.getElementById('expDataLoad') != null){
 			    opts += "<option value='" + expDatas[i] + "'>" + expDatas[i] + "</option>";
 			}
 			$("#expDataLoad").append(opts);
+			$("#expDataLoad2").append(opts);
 		};
 }
 
@@ -113,43 +54,170 @@ $.ajax({
 			}
 });
 
-// show saved experiment data
-	function show_selected() {
-		// location = location;
-
+	// plot selected data
+	function plotSelected() {
  	    let value =  $('#expDataLoad').val();
+			let value2 =  $('#expDataLoad2').val();
 	    document.getElementById('display').innerHTML = value;
 			csv = "./expData/" + value + "/data.csv"
+			csv2 = "./expData/" + value2 + "/data.csv"
 
-			$(document).ready(function(){
-					ciz()
-			});
+			let plotDatas = [];
+			let plotx = {};
+			let ploty = {};
+
+ 			let points = processData(csv)
+			let points2 = processData(csv2)
+
+			let x = Object.keys(points[0]);
+			let y = Object.keys(points[1]);
+
+			console.log(points2);
+
+ 			for (let i=0; i<x.length; i++){
+				if (document.getElementById(x[i]).checked == true){
+					plotx[x[i]] = points[0][x[i]];
+ 				};
+				if (document.getElementById('-'+x[i]).checked == true){
+ 					plotx['-'+x[i]] = points2[0][x[i]];
+				};
+			};
+			plotDatas.push(plotx)
+
+			for (let i=0; i<y.length; i++){
+				if (document.getElementById(y[i]).checked == true){
+					ploty[y[i]] = points[1][y[i]];
+				};
+				if (document.getElementById('-'+y[i]).checked == true){
+					ploty['-'+y[i]] = points2[1][y[i]];
+				}
+			};
+			plotDatas.push(ploty)
+
+
+
+			console.log('pppp',plotDatas);
+			makePlotly(plotDatas);
+	};
+
+ 	// show saved experiment data
+	function showPlotValues() {
+		document.getElementById('plotValues').innerHTML = "";
+
+		let value =  $('#expDataLoad').val();
+		csv = "./expData/" + value + "/data.csv"
+		let points = processData()
+		let x = Object.keys(points[0]);
+		let y = Object.keys(points[1]);
+
+		// console.log(points);
+		for (let i=0; i<x.length; i++){
+			document.getElementById('plotValues').innerHTML += "<input type='checkbox' id='" + x[i] + "'> " + x[i] + "</input><br>"
+		};
+
+		document.getElementById('plotValues').innerHTML += "<br>"
+
+		for (let i=0; i<y.length; i++){
+			document.getElementById('plotValues').innerHTML += "<input type='checkbox' id='" + y[i] + "'> " +  y[i] + "</input><br>"
+		}
+
+	};
+
+	// show saved experiment data
+	function showPlotValues2() {
+		document.getElementById('plotValues2').innerHTML = "";
+
+		let value =  $('#expDataLoad2').val();
+		csv = "./expData/" + value + "/data.csv"
+		let points = processData()
+		let x = Object.keys(points[0]);
+		let y = Object.keys(points[1]);
+
+		// console.log(points);
+		for (let i=0; i<x.length; i++){
+			document.getElementById('plotValues2').innerHTML += "<input type='checkbox' id='-" + x[i] + "'> -" + x[i] + "</input><br>"
+		};
+
+		document.getElementById('plotValues2').innerHTML += "<br>"
+
+		for (let i=0; i<y.length; i++){
+			document.getElementById('plotValues2').innerHTML += "<input type='checkbox' id='-" + y[i] + "'> -" +  y[i] + "</input><br>"
+		}
+
 	};
 
 if (document.getElementById('selectBtn') != null){
- 	document.getElementById('selectBtn').addEventListener('click', show_selected);
+	document.getElementById('expDataLoad').addEventListener('change', showPlotValues);
+	document.getElementById('expDataLoad2').addEventListener('change', showPlotValues2);
+
+ 	document.getElementById('selectBtn').addEventListener('click', plotSelected);
+
+
 };
 
-//console.log(csv);
+// console.log(csv);
 // var csv = "./data.csv";
 
-function ciz(){
 
-  d3.csv(csv, parsedData);
-		function parsedData(data){
-			// console.log(data);
- 			processData(data)
- 		};
+// function ciz(){
+
+	// var plotPoints = processData()
 
 
-	function processData(data) {
-		allRows = data;
+	function processData(csv) {
+		var rawCsv;
+		$.ajax({
+				type: 'GET',
+				url: csv,
+				dataType: 'text',
+				async: false,
+				success:   function (data){
+					rawCsv = data
+					// console.log( data);
+					}
+		});
+
+		var rawLines = rawCsv.split('\r\n');
+		var csvHead = rawLines[0].split(',');
+
+		var csvDatas = [];
+		for (var k=1; k<rawLines.length-1; k++){
+			var dataLine = {};
+			for (var j=0; j<csvHead.length; j++){
+				dataLine[csvHead[j]] = rawLines[k].split(',')[j];
+			};
+			csvDatas.push(dataLine);
+		};
+
+
+		allRows = csvDatas;
 	   // console.log(allRows);
 			//console.log(allRows[0]["id"]);
-    var x = [],
-				t1_y = [],
-		 		t2_y = [],
-				t3_y = [];
+
+		// get sensorNames
+		var sensorNames = [];
+		$.ajax({
+		    type: 'GET',
+		    url: './config.json',
+		    dataType: 'json',
+				async: false,
+				success:   function (data){
+						for (let i=0; i<Object.values(data).length; i++){
+							sensorNames.push( Object.values(data)[i]) ;
+						};
+					}
+		});
+
+
+    var x = {},
+				y = {}
+
+		for (let i=0; i<sensorNames.length; i++){
+			y[sensorNames[i]] = []
+		};
+
+		x['time'] = [];
+		x['timeD'] = [];
 
 		//var t_end = Number(allRows[allRows.length-1]["time"]);
 		//console.log(t_end);
@@ -164,39 +232,28 @@ function ciz(){
 			//x.push(time);
 
 			// x axis values - 5 min
-			x.push(timeStep);
+			x['time'].push(timeStep);
+			x['timeD'].push((timeStep/t_end).toFixed(2));
 			timeStep = timeStep + Number(expTimeStep);
 
-			if (row["id"] == "T1") {
-				t1_y.push(row["temp"]);
+			// y-axis values
+			for (let j=0; j<sensorNames.length; j++){
+ 				if (row["id"] == sensorNames[j]) {
+					y[sensorNames[j]].push(row["temp"])
+				}
 			};
-			if (row["id"] == "T2") {
-				t2_y.push(row["temp"]);
-			};
-			if (row["id"] == "T3") {
-				t3_y.push(row["temp"]);
-			};
+
 		};
 
-		//console.log(x);
-		var plotPoints = [x, t1_y, t2_y, t3_y];
+		var plotPoints = [x, y];
 
-		makePlotly(plotPoints);
-
-		var t_top,
-				t_bottom,
-				ric = [];
-
-		for (let i=0; i<t1_y.length; i++){
-			t_top = t3_y[i];
-			t_bottom = t1_y[i]
-			ric.push (richardson(t_top, t_bottom));
-		};
-		console.log('richardson', ric);
+		return plotPoints;
 
 	};
 
-	function richardson(t_top, t_bottom){
+
+
+	function richardson(){
 		const g = 9.81;
 		const beta = 0.000247;
 		const H = 0.8;
@@ -208,22 +265,90 @@ function ciz(){
 	};
 
 
+
 function makePlotly(plotPoints){
+		//
+		var layout = {
+			//width: 800,
+			height: 600,
+			//title: 'Sıcaklık Dağılımı',
+			legend: {
+				y: 0.5,
+				//traceorder: 'reversed',
+				font: {size: 26},
+			},
+			margin:{
+				b:150,
+				l:150
+			},
+
+			xaxis: {
+				showgrid: true,
+				zeroline: true,
+				showline: true,
+				ticks: 'inside',
+				mirror: 'ticks',
+				tick0: 0,
+				rangemode: 'tozero',
+				autorange: true,
+				// multiple plot
+				//domain: [0, 0.45],
+
+				title: 't [dk]',
+					tickfont: {
+						family: 'Old Standard TT, serif',
+						size: 28,
+						color: 'black'
+					},
+					titlefont: {
+						//family: 'Courier New, monospace',
+						size: 28,
+						color: 'black'
+					},
+				},
+
+			yaxis: {
+				showgrid: true,
+				zeroline: true,
+				showline: true,
+				ticks: 'inside',
+				mirror: 'ticks',
+
+				title: 'T [<sup>o</sup>C]',
+				tickfont: {
+					family: 'Old Standard TT, serif',
+					size: 28,
+					color: 'black',
+				},
+
+				titlefont: {
+					//	family: 'Courier New, monospace',
+						size: 28,
+						color: 'black'
+						}
+			}
+		}
+
+
 		// symbols
 		//https://codepen.io/etpinard/pen/WOxxaO
 
-		var symbols = ["square", "diamond", "circle"];
+		var symbols = ["square", "square-open", "diamond", "diamond-open", "circle", "circle-open"];
 		var colors = ["blue", "red", "green"]
-		var names = ["T1", "T2", "T3"];
+
+		var xName = Object.keys(plotPoints[0])
+		var xPoints = plotPoints[0][xName[0]]
+		var yPoints = Object.values(plotPoints[1]);
+		var yNames = Object.keys(plotPoints[1])
 
 		var data = [];
 
-		for (let i=0; i<plotPoints.length-1; i++){
+		for (let i=0; i<yPoints.length; i++){
 			var trace = {
-				x: plotPoints[0],
-				y: plotPoints[i+1],
+				x: xPoints,
+				y: yPoints[i],
 				mode: 'lines+markers',
-				name:names[i],
+				name: yNames[i],
 				marker: {
 					symbol: symbols[i],
 					color: colors[i],
@@ -278,20 +403,32 @@ function makePlotly(plotPoints){
 			};
 
 		function downloadData() {
-			document.getElementById("plotData").innerHTML = "<table><tr><td>"+ "time"+ "</td> <td>"+ "t1" + "</td><td>"+ "t2"+ "</td><td>"+ "t3" + "</td></tr> </table>";
+			var dataNames ='';
+			for (let j=0; j<yPoints.length; j++){
+				 dataNames += "<td class='tborder'>" + yNames[j] + "</td>";
+			};
+			document.getElementById("plotData").innerHTML +=  "<table><tr><td class='tborder'> x </td>" + dataNames + "</tr></table>"
 
-			var x = plotPoints[0];
-			var y1 = plotPoints[1];
-			var y2 = plotPoints[2];
-			var y3 = plotPoints[3];
+			var dataTableX = '';
+			var dataTableY = '';
 
-			for (let i=0; i<y1.length; i++){
-				document.getElementById("plotData").innerHTML += "<table><tr><td>"+x[i] + "</td><td>" + y1[i] + "</td><td> " + y2[i] + "</td><td> " + y3[i] + "</td></tr></table>";
+			for (let i=0; i<yPoints[0].length; i++){
+				dataTableX += "<table><tr><td class='tborder'>" + xPoints[i] + "</td></tr></table>";
 			};
 
-	      var a = document.body.appendChild(
-           document.createElement("a")
-        );
+			for (let j=0; j<yPoints.length; j++){
+				dataTableY += "<td>"
+				for (let i=0; i<yPoints[j].length; i++){
+					dataTableY += "<table><tr><td class='tborder'>" + yPoints[j][i] + "</td></tr></table>";
+				};
+				dataTableY += "</td>"
+			}
+
+			document.getElementById("plotData").innerHTML += "<table><tr><td class='tborder'>" + dataTableX + "</td>" + dataTableY + "</tr></table>"
+
+			var a = document.body.appendChild(
+         document.createElement("a")
+      );
        a.download = saveName + ".html";
        a.href = "data:text/html," + document.getElementById("plotData").innerHTML;
        a.click(); //Trigger a click on the element
@@ -309,11 +446,13 @@ function makePlotly(plotPoints){
 	 };
 
 
-};
+// };
 
 if (document.getElementById('expDataLoad') == null){
-ciz();
+	let plotPoints = processData(csv)
+	makePlotly(plotPoints);
 }
+
 
 /// temperatures
 function getData() {
@@ -333,20 +472,18 @@ function getData() {
 					if (document.getElementById('expDataLoad') == null){
 						if (expStatus  == 'START') {
 							setTimeout(getData, 5000);
-							setTimeout(ciz, 5000);
+							function ref(){
+								let plotPoints = processData(csv)
+								makePlotly(plotPoints)
+							}
+							setTimeout(ref, 5000);
 						}
 
 					}
-
-
-
         // if (autoRef == "On") {
         // 	  setTimeout(getData, 5000);
         //     setTimeout(ciz, 5000);
         // }
-
-
-
     });
 
  };
